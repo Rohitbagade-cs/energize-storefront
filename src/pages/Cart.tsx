@@ -1,6 +1,6 @@
 
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Trash2, ArrowLeft, Plus, Minus } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity, clearCart, getTotalItems, getTotalPrice } = useCart();
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   const handleRemoveItem = (productId: string, productName: string) => {
     removeFromCart(productId);
@@ -20,11 +21,16 @@ const Cart = () => {
   };
   
   const handleCheckout = () => {
-    toast({
-      title: "Checkout initiated",
-      description: "This would normally redirect to a payment page.",
-    });
-    // In a real app, you would redirect to a checkout page or process
+    if (cart.length === 0) {
+      toast({
+        title: "Cart is empty",
+        description: "Add items to your cart before proceeding to checkout.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    navigate("/checkout");
   };
 
   return (

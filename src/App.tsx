@@ -8,6 +8,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Policy from "./pages/Policy";
 import Cart from "./pages/Cart";
+import Payment from "./pages/Payment";
 import NotFound from "./pages/NotFound";
 import "./App.css";
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/policy" element={<Policy />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Payment />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />
