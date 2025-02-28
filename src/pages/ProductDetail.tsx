@@ -8,10 +8,12 @@ import Footer from "../components/Footer";
 import { getProductById, Product, getBestSellers } from "../data/products";
 import ProductCard from "../components/ProductCard";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from "../context/CartContext";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
+  const { addToCart } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
@@ -54,8 +56,9 @@ const ProductDetail = () => {
     }
   };
 
-  const addToCart = () => {
+  const handleAddToCart = () => {
     if (product) {
+      addToCart(product, quantity);
       toast({
         title: "Added to cart",
         description: `${quantity} × ${product.name} added to your cart.`,
@@ -201,7 +204,7 @@ const ProductDetail = () => {
               
               {/* Add to cart button */}
               <button
-                onClick={addToCart}
+                onClick={handleAddToCart}
                 className="btn-primary flex items-center justify-center py-3"
               >
                 <ShoppingCart className="h-5 w-5 mr-2" />

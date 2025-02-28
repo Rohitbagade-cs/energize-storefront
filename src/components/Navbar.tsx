@@ -3,10 +3,12 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ShoppingCart, Menu, X } from "lucide-react";
+import { useCart } from "../context/CartContext";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { getTotalItems } = useCart();
 
   // Handle scroll effect
   useEffect(() => {
@@ -76,9 +78,14 @@ const Navbar = () => {
         >
           <Link
             to="/cart"
-            className="p-2 rounded-full hover:bg-secondary transition-colors duration-300"
+            className="p-2 rounded-full hover:bg-secondary transition-colors duration-300 relative"
           >
             <ShoppingCart className="h-5 w-5" />
+            {getTotalItems() > 0 && (
+              <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {getTotalItems()}
+              </span>
+            )}
           </Link>
 
           {/* Mobile menu button */}
@@ -107,6 +114,7 @@ const Navbar = () => {
               { title: "Shop", path: "/shop" },
               { title: "About", path: "/about" },
               { title: "Contact", path: "/contact" },
+              { title: "Cart", path: "/cart" },
             ].map((item) => (
               <Link
                 key={item.title}
@@ -115,6 +123,11 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.title}
+                {item.title === "Cart" && getTotalItems() > 0 && (
+                  <span className="ml-2 bg-primary text-white text-xs font-bold rounded-full px-2 py-1">
+                    {getTotalItems()}
+                  </span>
+                )}
               </Link>
             ))}
           </div>
