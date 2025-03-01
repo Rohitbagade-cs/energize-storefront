@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
@@ -32,7 +31,7 @@ const Index = () => {
     description: "Our premium signature energy drink crafted with natural ingredients for maximum performance. Experience sustained energy without the crash.",
     price: 4.99,
     rating: 5,
-    image: "/images/hero-product.png",
+    image: "https://images-na.ssl-images-amazon.com/images/G/01/aplusautomation/vendorimages/9acf4bf6-9b8f-4dbc-97fe-034459d5ee3c.png._CB276149877_.png",
     category: "energy",
     stock: 100,
     new: true,
@@ -174,7 +173,7 @@ const Index = () => {
                 
                 {/* The energy drink can */}
                 <motion.img
-                  src="/images/hero-product.png"
+                  src={product.image}
                   alt="EnergizeX Fusion Energy Drink"
                   className="max-w-xs md:max-w-sm xl:max-w-md mx-auto drop-shadow-2xl relative z-10"
                   animate={{ 
