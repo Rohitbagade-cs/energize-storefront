@@ -73,7 +73,7 @@ const Index = () => {
               className="relative"
             >
               <img
-                src="/images/hero-product.png"
+                src="https://www.pngmart.com/files/22/Monster-Energy-PNG-Photos.png"
                 alt="Energize Energy Drink"
                 className="w-full max-w-md mx-auto drop-shadow-2xl"
               />
