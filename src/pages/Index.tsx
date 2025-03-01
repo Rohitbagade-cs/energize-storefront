@@ -145,10 +145,10 @@ const Index = () => {
       </section>
       
       {/* Featured Products Carousel Section */}
-      <FeaturedProducts />
+      {/* <FeaturedProducts /> */}
       
       {/* Best Sellers Section */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      {/* <section className="py-16 md:py-24 bg-gray-50">
         <div className="container-custom">
           <div className="text-center mb-12">
             <motion.span
@@ -193,7 +193,7 @@ const Index = () => {
             </Link>
           </motion.div>
         </div>
-      </section>
+      </section> */}
       
       {/* Newsletter Section */}
       <section className="py-16 md:py-24 bg-gradient-to-r from-gray-900 to-primary/90 text-white">
