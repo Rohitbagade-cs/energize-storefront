@@ -391,7 +391,8 @@ const Index = () => {
       <Footer />
 
       {/* Custom CSS for pulsing animation */}
-      <style jsx>{`
+      <style>
+        {`
         .pulse-animation {
           animation: can-pulse 1s ease-in-out;
         }
@@ -401,7 +402,8 @@ const Index = () => {
           50% { transform: scale(1.05); }
           100% { transform: scale(1); }
         }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };
