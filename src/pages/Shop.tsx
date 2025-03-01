@@ -1,52 +1,53 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
-import { Search } from "lucide-react";
+import { products, categories, getProductsByCategory } from "../data/products";
+import { Search, SlidersHorizontal } from "lucide-react";
 
 const Shop = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = searchParams.get("category");
   
-  // Use the same product as on homepage
-  const product = {
-    id: "energize-x",
-    name: "EnergizeX Fusion",
-    description: "Our premium signature energy drink crafted with natural ingredients for maximum performance. Experience sustained energy without the crash.",
-    fullDescription: "EnergizeX Fusion combines our signature blend of caffeine, vitamins, and natural extracts to provide long-lasting energy without the crash. Perfect for athletes, professionals, and anyone who needs a boost to power through their day.",
-    price: 4.99,
-    image: "https://images-na.ssl-images-amazon.com/images/G/01/aplusautomation/vendorimages/9acf4bf6-9b8f-4dbc-97fe-034459d5ee3c.png._CB276149877_.png",
-    category: "energy",
-    featured: true,
-    new: true,
-    bestSeller: true,
-    nutritionalInfo: {
-      caffeine: "150mg",
-      calories: "10",
-      sugar: "0g",
-      servingSize: "12 fl oz (355ml)"
-    },
-    ingredients: [
-      "Carbonated Water",
-      "Citric Acid",
-      "Natural Flavors",
-      "Caffeine",
-      "Taurine",
-      "Panax Ginseng Extract",
-      "L-Carnitine",
-      "B Vitamins (B3, B6, B12)"
-    ],
-    flavors: ["Electric Blue"],
-    stock: 100
-  };
+  const [selectedCategory, setSelectedCategory] = useState(categoryParam || "all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // Create filtered product array with only this product
-  const filteredProduct = searchQuery ? 
-    (product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-     product.description.toLowerCase().includes(searchQuery.toLowerCase()) ? 
-     [product] : []) : 
-    [product];
+  useEffect(() => {
+    let filtered = products;
+    
+    // Apply category filter
+    if (selectedCategory !== "all") {
+      filtered = getProductsByCategory(selectedCategory);
+    }
+    
+    // Apply search filter
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    setFilteredProducts(filtered);
+    
+    // Update URL params
+    if (selectedCategory !== "all") {
+      setSearchParams({ category: selectedCategory });
+    } else {
+      setSearchParams({});
+    }
+  }, [selectedCategory, searchQuery, setSearchParams]);
+
+  const handleCategoryChange = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    setIsFilterOpen(false);
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -68,16 +69,86 @@ const Shop = () => {
             >
               <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Products</h1>
               <p className="text-lg text-gray-300">
-                Discover our premium energy drink designed to fuel your day.
+                Discover our range of premium energy drinks designed to fuel your day.
               </p>
             </motion.div>
           </div>
         </section>
         
-        {/* Product Section */}
+        {/* Filters and Products */}
         <section className="py-12">
           <div className="container-custom">
-            <div className="flex flex-col lg:flex-row gap-8">              
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Filters - Desktop */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                className="lg:w-64 hidden lg:block"
+              >
+                <div className="bg-white rounded-xl shadow-sm p-6 sticky top-24">
+                  <h2 className="text-lg font-semibold mb-4">Categories</h2>
+                  <ul className="space-y-2">
+                    {categories.map((category) => (
+                      <li key={category.id}>
+                        <button
+                          onClick={() => handleCategoryChange(category.id)}
+                          className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
+                            selectedCategory === category.id
+                              ? "bg-primary text-white"
+                              : "hover:bg-gray-100"
+                          }`}
+                        >
+                          {category.name}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
+              
+              {/* Mobile filters toggle */}
+              <div className="lg:hidden">
+                <button
+                  onClick={() => setIsFilterOpen(!isFilterOpen)}
+                  className="w-full flex items-center justify-between bg-white rounded-lg shadow-sm p-4 mb-4"
+                >
+                  <span className="font-medium">
+                    {selectedCategory === "all"
+                      ? "All Products"
+                      : categories.find(c => c.id === selectedCategory)?.name}
+                  </span>
+                  <SlidersHorizontal className="h-5 w-5" />
+                </button>
+                
+                {/* Mobile filters dropdown */}
+                {isFilterOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="bg-white rounded-lg shadow-md p-4 mb-4"
+                  >
+                    <h2 className="font-medium mb-2">Categories</h2>
+                    <div className="space-y-1">
+                      {categories.map((category) => (
+                        <button
+                          key={category.id}
+                          onClick={() => handleCategoryChange(category.id)}
+                          className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                            selectedCategory === category.id
+                              ? "bg-primary text-white"
+                              : "hover:bg-gray-100"
+                          }`}
+                        >
+                          {category.name}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+              
               {/* Products */}
               <div className="flex-1">
                 {/* Search */}
@@ -95,16 +166,16 @@ const Shop = () => {
                 </div>
                 
                 {/* Results */}
-                {filteredProduct.length > 0 ? (
+                {filteredProducts.length > 0 ? (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5 }}
-                    className="flex justify-center"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                   >
-                    <div className="max-w-md">
-                      <ProductCard product={filteredProduct[0]} index={0} />
-                    </div>
+                    {filteredProducts.map((product, index) => (
+                      <ProductCard key={product.id} product={product} index={index} />
+                    ))}
                   </motion.div>
                 ) : (
                   <motion.div
@@ -114,7 +185,7 @@ const Shop = () => {
                   >
                     <h3 className="text-xl font-medium mb-2">No products found</h3>
                     <p className="text-gray-500">
-                      Try adjusting your search to find what you're looking for.
+                      Try adjusting your search or filter to find what you're looking for.
                     </p>
                   </motion.div>
                 )}
