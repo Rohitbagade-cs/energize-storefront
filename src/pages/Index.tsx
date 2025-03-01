@@ -171,11 +171,11 @@ const Index = () => {
                 {/* Glow effect behind can */}
                 <div className="absolute inset-0 -z-10 bg-primary/30 rounded-full filter blur-3xl animate-pulse-subtle scale-90"></div>
                 
-                {/* The energy drink can */}
+                {/* The energy drink can - Adjusting size here */}
                 <motion.img
                   src={product.image}
                   alt="EnergizeX Fusion Energy Drink"
-                  className="max-w-xs md:max-w-sm xl:max-w-md mx-auto drop-shadow-2xl relative z-10"
+                  className="w-auto h-auto max-w-[200px] md:max-w-[250px] xl:max-w-[300px] mx-auto drop-shadow-2xl relative z-10"
                   animate={{ 
                     y: [0, -10, 0],
                   }}
